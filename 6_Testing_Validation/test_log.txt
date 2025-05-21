@@ -1,0 +1,36 @@
+TEST STARTED: Simulating Parking Spot Trigger
+
+Serial port opened: /dev/ttyUSB0
+Raw input received: '2,0'
+
+Parsed spot_id = '2', raw_state = '0' → mapped to status = 'O' (Available)
+MQTT Published: {'spot_id': '2', 'status': 'O', 'timestamp': 1747783901}
+DynamoDB Updated for spot 2 with payload:
+    {
+        "spot_id": "2",
+        "status": "O",
+        "timestamp": 1747783901
+    }
+
+Waiting 10 seconds for system sync...
+
+Lambda GET triggered:
+    → Returned JSON:
+    [
+        {
+            "spot": "2",
+            "status": "O"
+        }
+    ]
+
+Frontend UI updated:
+     	Spot 2 displayed as available
+	All grid cells rendered in correct layout
+
+SYSTEM BEHAVIOR CONFIRMED:
+    - End-to-end data transmission successful
+    - MQTT and DynamoDB pipeline working
+    - Lambda properly filters latest record
+    - Frontend synced and auto-refreshed UI
+
+TEST COMPLETE: Functional requirement passed

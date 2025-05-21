@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Parking Lot Status</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f9f9f9;
+      text-align: center;
+      padding: 20px;
+    }
+    h1 {
+      font-size: 2em;
+    }
+    .legend {
+      margin-bottom: 20px;
+    }
+    .section-label {
+      margin: 30px 0 10px;
+      font-weight: bold;
+      text-decoration: underline;
+    }
+    .grid {
+      display: inline-grid;
+      gap: 5px;
+      margin-bottom: 40px;
+    }
+    .spot {
+      width: 28px;
+      height: 28px;
+      background: #ddd;
+      border-radius: 4px;
+      font-size: 0.75em;
+      line-height: 28px;
+      font-weight: bold;
+      color: white;
+    }
+    .taken {
+      background: #e74c3c;
+    }
+    .available {
+      background: #2ecc71;
+    }
+  </style>
+</head>
+<body>
+  <h1>🚗 Parking Lot Status</h1>
+  <div class="legend">
+    <span style="color:#e74c3c;">■ = Taken</span>
+    <span style="color:#2ecc71;">■ = Available</span>
+  </div>
+
+  <div class="section-label">(A) North Lot</div>
+  <div class="grid" style="grid-template-columns: repeat(24, 1fr);">
+    <script>for (let i = 1; i <= 48; i++) document.write(`<div class="spot available" id="spot-${i}">O</div>`);</script>
+  </div>
+
+  <div class="section-label">(B) Spine Lot</div>
+  <div class="grid" style="grid-template-columns: repeat(6, 1fr);">
+    <script>for (let i = 49; i <= 78; i++) document.write(`<div class="spot available" id="spot-${i}">O</div>`);</script>
+  </div>
+
+  <div class="section-label">(C) West Curved Lot</div>
+  <div class="grid" style="grid-template-columns: repeat(16, 1fr);">
+    <script>for (let i = 79; i <= 178; i++) document.write(`<div class="spot available" id="spot-${i}">O</div>`);</script>
+  </div>
+
+  <div class="section-label">(D) South Lot</div>
+  <div class="grid" style="grid-template-columns: repeat(20, 1fr);">
+    <script>for (let i = 179; i <= 258; i++) document.write(`<div class="spot available" id="spot-${i}">O</div>`);</script>
+  </div>
+
+  <div class="section-label">(E) Overflow Area</div>
+  <div class="grid" style="grid-template-columns: repeat(14, 1fr);">
+    <script>for (let i = 259; i <= 318; i++) document.write(`<div class="spot available" id="spot-${i}">O</div>`);</script>
+  </div>
+
+  <script>
+    async function updateSpots() {
+      try {
+        const res = await fetch("https://vn3rmie7xc.execute-api.us-east-1.amazonaws.com/prod/parkingdata");
+        const data = await res.json();
+
+        data.forEach(({ spot_id, status }) => {
+          const el = document.getElementById(`spot-${spot_id}`);
+          if (el) {
+            el.textContent = status;
+            el.classList.remove("taken", "available");
+            el.classList.add(status === "X" ? "taken" : "available");
+
+            console.log(`✅ Updated spot-${spot_id} to ${status}`);
+          } else {
+            console.warn(`⚠️ No matching div for spot-${spot_id}`);
+          }
+        });
+      } catch (e) {
+        console.error("❌ Error fetching data:", e);
+      }
+    }
+
+    updateSpots(); // Run immediately on load
+    setInterval(updateSpots, 5000); // Then every 5 seconds
+  </script>
+</body>
+</html>
