@@ -10,7 +10,7 @@ These steps assume you're running the Raspberry Pi with Python 3 and dependencie
 ### Raspberry Pi Setup
 ```bash
 # Clone the project
-git clone https://github.com/your-repo-url/RaspberryPiParkingSystem.git
+git clone https://github.com/Dalairr/ParkingSystem.git
 cd RaspberryPiParkingSystem
 
 # Create virtual environment
